@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>League of Love</title>
+
+<style>
+@font-face{
+    font-family:"League";
+    src:
+        local("League"),
+        local("League of Legends"),
+        url("League/L3.ttf") format("truetype");
+    font-weight: 400 900;
+    font-style:normal;
+    font-display:swap;
+}
+
+
+    @font-face {
+        font-family: "Leaguebold";
+        src: local("League"), local("League of Legends"),
+            url("League/L1.otf") format("opentype");
+        font-weight: 400 900;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+:root{
+    --blue:#0A1428;
+    --blue-dark:#050A16;
+    --panel:#111827;
+    --gold:#C89B3C;
+    --gold-light:#F0E6D2;
+    --muted:#A09B8C;
+    --line:rgba(200,155,60,.35);
+}
+
+body{
+    font-family:"League","Segoe UI",sans-serif;
+    background:var(--blue);
+    color:white;
+    overflow-x:hidden;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    background:var(--gold);
+    color:var(--blue);
+    font-weight:bold;
+    cursor:pointer;
+    transition:transform .2s ease, filter .2s ease;
+}
+
+button:hover{
+    transform:scale(1.02);
+    filter:brightness(1.08);
+}
+
+/* LOGIN */
+
+#loginScreen{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:28px;
+    background:
+        radial-gradient(circle at center,rgba(201,32,154,.2),transparent 34%),
+        linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.88)),
+        radial-gradient(circle at top,#1f3b63 0,#0A1428 45%,#020611 100%);
+    background-size:cover;
+    background-position:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+#loginScreen::before,
+#loginScreen::after{
+    content:"";
+    position:absolute;
+    top:-4vh;
+    bottom:-4vh;
+    width:min(58vw,760px);
+    background-repeat:no-repeat;
+    background-size:cover;
+    opacity:.54;
+    filter:saturate(.9) contrast(.92) brightness(.82);
+    pointer-events:none;
+    -webkit-mask-image:
+        linear-gradient(to bottom,transparent 0,#000 12%,#000 86%,transparent 100%),
+        linear-gradient(to right,transparent 0,#000 16%,#000 74%,transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask-image:
+        linear-gradient(to bottom,transparent 0,#000 12%,#000 86%,transparent 100%),
+        linear-gradient(to right,transparent 0,#000 16%,#000 74%,transparent 100%);
+    mask-composite:intersect;
+}
+
+#loginScreen::before{
+    left:-4vw;
+    background-image:
+        radial-gradient(circle at 42% 50%,rgba(201,32,154,.14),transparent 52%),
+        linear-gradient(90deg,rgba(5,10,22,.16),rgba(5,10,22,.42) 58%,rgba(5,10,22,.94) 100%),
+        url("senna-login.png");
+    background-position:center;
+}
+
+#loginScreen::after{
+    right:-4vw;
+    background-image:
+        radial-gradient(circle at 58% 50%,rgba(201,32,154,.14),transparent 52%),
+        linear-gradient(270deg,rgba(5,10,22,.16),rgba(5,10,22,.42) 58%,rgba(5,10,22,.94) 100%),
+        url("zilean-login.png");
+    background-position:center;
+}
+
+.login-heart{
+    position:absolute;
+    width:clamp(160px,23vw,300px);
+    aspect-ratio:1;
+    top:20%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:
+        radial-gradient(circle,rgba(255,39,190,.22) 0,rgba(154,32,255,.12) 42%,transparent 72%),
+        url("login-heart.png") center/contain no-repeat;
+    background-blend-mode:screen;
+    opacity:.68;
+    mix-blend-mode:screen;
+    filter:
+        blur(2.4px)
+        drop-shadow(0 0 26px rgba(255,255,255,.28))
+        drop-shadow(0 0 58px rgba(255,43,190,.68))
+        drop-shadow(0 0 130px rgba(154,32,255,.42));
+    -webkit-mask-image:radial-gradient(circle,#000 0,#000 24%,rgba(0,0,0,.58) 42%,rgba(0,0,0,.18) 58%,transparent 72%);
+    mask-image:radial-gradient(circle,#000 0,#000 24%,rgba(0,0,0,.58) 42%,rgba(0,0,0,.18) 58%,transparent 72%);
+    pointer-events:none;
+    z-index:1;
+}
+
+.login-vignette{
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,41,205,.28) 0,rgba(154,32,255,.14) 16%,transparent 34%),
+        radial-gradient(circle at center,rgba(255,39,190,.14) 0,rgba(8,6,18,.12) 22%,rgba(8,6,18,.52) 54%,rgba(2,6,17,.96) 100%),
+        linear-gradient(90deg,rgba(5,10,22,.9),rgba(5,10,22,.2) 34%,rgba(5,10,22,.2) 66%,rgba(5,10,22,.9));
+    pointer-events:none;
+    z-index:2;
+}
+
+.logo{
+    position:relative;
+    z-index:3;
+    font-size:clamp(2.6rem,9vw,4rem);
+    color:var(--gold);
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:0;
+    text-shadow:0 0 22px rgba(200,155,60,.45);
+}
+
+.subtitle{
+    position:relative;
+    z-index:3;
+    color:var(--gold-light);
+    margin-bottom:40px;
+}
+
+.login-box{
+    position:relative;
+    z-index:3;
+    width:min(320px,100%);
+    background:rgba(5,10,22,.76);
+    border:1px solid var(--line);
+    padding:24px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 20px 60px rgba(0,0,0,.42),0 0 42px rgba(202,39,164,.18);
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin-bottom:10px;
+    background:#111;
+    border:1px solid var(--gold);
+    color:white;
+    outline:none;
+}
+
+input:focus{
+    box-shadow:0 0 0 3px rgba(200,155,60,.18);
+}
+
+.login-error{
+    min-height:22px;
+    margin-top:12px;
+    color:#ffb4a8;
+    font-size:.92rem;
+}
+
+#teemoEgg{
+    position:relative;
+    z-index:3;
+    margin-top:20px;
+    color:var(--gold-light);
+    text-align:center;
+    line-height:1.6;
+    text-shadow:0 0 18px rgba(255,43,190,.45);
+}
+
+/* MATCH FOUND */
+
+#matchFound{
+    display:none;
+    min-height:100vh;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    gap:18px;
+    /* background image from lol.jpg with a dark overlay to match theme */
+    background:
+        linear-gradient(rgba(0,0,0,0.48), rgba(0,0,0,0.72)),
+        url("lol.jpg");
+    background-size:cover;
+    background-position:center;
+    text-align:center;
+}
+
+.match{
+    font-size:clamp(3rem,12vw,5rem);
+    color:var(--gold);
+    font-weight:900;
+    text-transform:uppercase;
+    text-shadow:
+        0 0 20px rgba(200,155,60,.58),
+        0 0 52px rgba(255,43,190,.28);
+    animation:pulse 1s infinite;
+}
+
+.match-subtitle{
+    color:var(--gold-light);
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+}
+
+/* Match circle and progress ring styles */
+.match-circle{
+
+    position:relative;
+    width:min(500px,80vw);
+    height:min(500px,80vw);
+
+    /* stronger gold outline to match the LOVE FOUND color */
+    border:4px solid var(--gold);
+    border-radius:50%;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(9,20,40,0.25);
+
+    /* visible glow similar to the LOVE FOUND text */
+    box-shadow:
+        0 0 28px rgba(200,155,60,0.55),
+        inset 0 0 18px rgba(200,155,60,0.28);
+
+}
+
+.progress-ring{
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:0;
+}
+
+.progress-ring__svg{ width:100%; height:100%; transform:rotate(-90deg); }
+
+.progress-ring__bg{ stroke-width:6; }
+
+.progress-ring__circle{
+    stroke-dasharray: 339.292;
+    stroke-dashoffset: 339.292;
+}
+
+.progress-ring__svg{ overflow:visible; }
+
+/* glow applied via SVG filter at completion to avoid rectangular artifacts */
+.progress-ring__circle.glow{
+    transition: stroke-dashoffset 200ms linear, opacity 260ms ease;
+    stroke-opacity: 0.95;
+}
+
+.match{ z-index:2; text-align:center }
+
+.duo-text{
+    margin-top:12px;
+    text-align:center;
+    color:white;
+    font-size:1.05rem;
+    z-index:2;
+
+}
+
+#acceptBtn{
+
+    margin-top:18px;
+    width:220px;
+
+    background:#C89B3C;
+    color:#091428;
+
+    font-size:1rem;
+    z-index:2;
+}
+
+/* Ensure match content is centered on the page */
+#matchFound{ padding:24px; }
+
+@media (max-width:520px){
+    .match{ font-size:2.4rem }
+    .duo-text{ font-size:0.95rem }
+    #acceptBtn{ width:60% }
+}
+
+/* MAIN */
+
+#mainContent{
+    display:none;
+    background:linear-gradient(180deg,#091428 0,#0A1428 32%,#050A16 100%);
+}
+
+.hero{
+    min-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:80px 20px 50px;
+    background:
+        linear-gradient(rgba(5,10,22,.5),rgba(10,20,40,.95)),
+        url("background.jpg"),
+        radial-gradient(circle at center,#203a58 0,#0A1428 54%,#050A16 100%);
+    background-size:cover;
+    background-position:center;
+}
+
+.hero-inner{
+    width:min(860px,100%);
+}
+
+.hero h1{
+    color:var(--gold);
+    font-size:clamp(2.4rem,8vw,4.8rem);
+    line-height:1;
+    margin-bottom:18px;
+}
+
+.hero p{
+    color:var(--gold-light);
+    font-size:1.16rem;
+}
+
+#daysCounter{
+    margin-top:14px;
+    color:var(--gold);
+    font-weight:700;
+}
+
+.section{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.card{
+    background:linear-gradient(180deg,var(--panel),#0d1422);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:30px;
+    margin-bottom:30px;
+}
+
+.section-title{
+    color:var(--gold);
+    margin-bottom:20px;
+}
+
+/* CHAMPIONS */
+
+.champions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:center;
+    align-items:center;
+}
+
+.champion{
+    width:min(350px,100%);
+    text-align:center;
+}
+
+.portrait{
+    position:relative;
+    height:450px;
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:
+        linear-gradient(145deg,rgba(200,155,60,.35),rgba(10,20,40,.45)),
+        radial-gradient(circle at top,#314a73 0,#111827 56%,#050A16 100%);
+}
+
+.portrait img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.portrait-fallback{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:rgba(240,230,210,.92);
+    font-size:6rem;
+    font-weight:700;
+}
+
+.champion h3{
+    color:var(--gold-light);
+    margin-top:14px;
+}
+
+.champion p{
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.duo-heart{
+    font-size:4rem;
+    color:var(--gold);
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+}
+
+.stat{
+    min-height:130px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:var(--blue-dark);
+    border:1px solid rgba(240,230,210,.08);
+    border-radius:8px;
+    text-align:center;
+    padding:18px;
+}
+
+.stat-icon{
+    width:56px;
+    height:56px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:12px;
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 18px rgba(0,199,255,0.06);
+}
+
+.stat strong{
+    color:var(--gold);
+    font-size:2rem;
+    line-height:1.1;
+}
+
+.stat span{
+    color:var(--gold-light);
+    margin-top:8px;
+}
+
+/* ACHIEVEMENTS */
+
+.achievements{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+}
+
+.achievement{
+    padding:15px;
+    border-radius:8px;
+    background:#1b2538;
+    color:var(--gold-light);
+}
+
+.unlocked{
+    border-left:5px solid #00d26a;
+}
+
+.locked{
+    border-left:5px solid #888;
+    opacity:.7;
+}
+
+/* TIMELINE */
+
+.timeline{
+    border-left:3px solid var(--gold);
+    padding-left:20px;
+}
+
+.timeline:not(.timeline-horizontal) > div{
+    margin-bottom:25px;
+}
+
+.timeline:not(.timeline-horizontal) > div:last-child{
+    margin-bottom:0;
+}
+
+.timeline h3{
+    color:var(--gold-light);
+    margin-bottom:6px;
+}
+
+.timeline p{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+/* Horizontal timeline (cards) */
+.timeline-horizontal{
+    display:flex;
+    gap:18px;
+    overflow-x:auto;
+    padding:18px 6px;
+    align-items:center; /* center items vertically along the line */
+    position:relative;
+}
+
+.timeline-horizontal::before{
+    content:"";
+    position:absolute;
+    left:6px;
+    right:6px;
+    top:50%;
+    height:2px;
+    background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(200,155,60,0.06), rgba(255,255,255,0.02));
+    transform:translateY(-50%);
+    z-index:0;
+}
+
+.timeline-item{
+    position:relative;
+    z-index:2;
+    min-width:200px;
+    padding:12px 16px;
+    border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    cursor:pointer;
+    text-align:center;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.timeline-item:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,0.45); }
+
+.timeline-item.active{ border-color:var(--gold); box-shadow:0 18px 48px rgba(200,155,60,0.12); }
+
+.timeline-preview{ margin-top:14px; text-align:center; }
+.timeline-preview img{ max-width:100%; max-height:320px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); }
+
+.timeline-preview{ z-index:3; }
+
+@media (max-width:760px){
+    .timeline-item{ min-width:160px }
+    .timeline-preview img{ max-height:220px }
+}
+
+/* REWARD */
+
+.reward-btn{
+    max-width:400px;
+    margin:22px auto 0;
+}
+
+#reward{
+    display:none;
+    text-align:center;
+    margin-top:25px;
+    font-size:1.2rem;
+    color:var(--gold-light);
+    line-height:1.7;
+}
+
+#reward h1,
+#reward h2{
+    color:var(--gold);
+}
+
+/* GALLERY */
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+}
+
+.highlight{
+    height:250px;
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid rgba(240,230,210,.1);
+    background:
+        linear-gradient(145deg,rgba(200,155,60,.2),rgba(10,20,40,.58)),
+        radial-gradient(circle at top,#2c3d5e 0,#111827 58%,#050A16 100%);
+}
+
+.highlight img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+footer{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--muted);
+}
+
+#lootBox{
+    width:34px;
+    height:34px;
+    margin-top:18px;
+    padding:0;
+    border-radius:8px;
+    opacity:.18;
+    font-size:1rem;
+}
+
+#lootBox:hover{
+    opacity:.8;
+}
+
+#patchHeart{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:20;
+    width:28px;
+    height:28px;
+    padding:0;
+    border-radius:50%;
+    opacity:.28;
+    font-size:.95rem;
+    box-shadow:0 0 22px rgba(255,43,190,.28);
+}
+
+#patchHeart:hover{
+    opacity:.9;
+}
+
+#mythicAchievement{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:
+        radial-gradient(circle at center,rgba(200,155,60,.18),transparent 38%),
+        rgba(1,5,14,.88);
+    backdrop-filter:blur(8px);
+}
+
+.mythic-card{
+    width:min(520px,100%);
+    padding:34px 28px;
+    border:1px solid rgba(200,155,60,.72);
+    border-radius:8px;
+    background:
+        linear-gradient(180deg,rgba(24,34,54,.96),rgba(5,10,22,.98)),
+        radial-gradient(circle at top,rgba(200,155,60,.24),transparent 48%);
+    box-shadow:0 0 48px rgba(200,155,60,.22), inset 0 0 32px rgba(200,155,60,.08);
+    text-align:center;
+    color:var(--gold-light);
+    animation:mythicPop .34s ease-out;
+}
+
+.mythic-line{
+    color:var(--gold);
+    opacity:.9;
+    letter-spacing:0;
+}
+
+.mythic-tier{
+    margin:18px 0 8px;
+    color:var(--gold);
+    font-size:1.1rem;
+}
+
+.mythic-title{
+    color:white;
+    font-size:clamp(2rem,9vw,3.4rem);
+    line-height:1;
+    margin-bottom:18px;
+    text-shadow:0 0 22px rgba(200,155,60,.42);
+}
+
+.mythic-pair{
+    font-size:1.35rem;
+    margin-bottom:18px;
+}
+
+.mythic-date{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.mythic-date strong{
+    color:var(--gold-light);
+}
+
+@keyframes mythicPop{
+    from{
+        opacity:0;
+        transform:scale(.92);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@media (max-width:760px){
+    #loginScreen::before,
+    #loginScreen::after{
+        width:86vw;
+        opacity:.26;
+    }
+
+    #loginScreen::before{
+        transform:translateX(-28%);
+    }
+
+    #loginScreen::after{
+        transform:translateX(28%);
+    }
+
+    .login-heart{
+        width:150px;
+        top:18%;
+        transform:translate(-50%,-50%);
+        opacity:.64;
+    }
+
+    .champions{
+        gap:26px;
+    }
+
+    .duo-heart{
+        order:2;
+        width:100%;
+        text-align:center;
+    }
+
+    .champion{
+        width:100%;
+    }
+
+    .portrait{
+        height:360px;
+    }
+
+    .card{
+        padding:22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="loginSound" src="login-sound.mp3" preload="auto" autoplay></audio>
+<audio id="matchSound" src="match-found.mp3" preload="auto"></audio>
+<audio id="pingSound" src="ping.mp3" preload="auto"></audio>
+<!-- timeline and reward sounds -->
+<audio id="Slain" src="Slain.mp3" preload="auto"></audio>
+<audio id="double" src="double.mp3" preload="auto"></audio>
+<audio id="triple" src="triple.mp3" preload="auto"></audio>
+<audio id="quadra" src="quadra.mp3" preload="auto"></audio>
+<audio id="pentakill" src="pentakill.mp3" preload="auto"></audio>
+<audio id="Okay" src="Okay.mp3" preload="auto"></audio>
+<audio id="welcome" src="welcome.mp3" preload="auto"></audio>
+<script>
+    // Abbassa il volume del match-found per renderlo meno invadente
+    (function(){
+        const m = document.getElementById('matchSound');
+        if(m) try{ m.volume = 0.0; }catch(e){}
+    })();
+</script>
+
+<section id="loginScreen">
+    <div class="login-heart" aria-hidden="true"></div>
+    <div class="login-vignette" aria-hidden="true"></div>
+
+    <h1 class="logo" id="leagueLogo">League of Love</h1>
+    <p class="subtitle">Benvenuto Evocatore</p>
+
+    <div class="login-box">
+        <input id="summonerName" type="text" value="Alessandro" placeholder="Nome evocatore">
+        <input id="eventCode" type="password" value="22062024" placeholder="Codice evento">
+        <button onclick="login()">ACCEDI ALLA NOSTRA STAGIONE</button>
+        <p id="loginError" class="login-error"></p>
+    </div>
+
+    <div id="teemoEgg" style="display:none;margin-top:20px;">
+        🐹❤️
+        <br>
+        Pensavi di aver trovato una partita.
+        <br>
+        Hai trovato l'amore.
+    </div>
+</section>
+
+<section id="matchFound">
+    <audio id="loveSound" src="love-found.mp3"></audio>
+
+    <div class="match-circle">
+
+        <div class="progress-ring" id="progressRing" aria-hidden="true">
+            <svg class="progress-ring__svg" viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <defs>
+                    <!-- neon filter: blur the alpha, color it, then merge with original graphic -->
+                    <filter id="neon" x="-50" y="-50" width="220" height="220" filterUnits="userSpaceOnUse">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur" />
+                        <feFlood flood-color="#00C7FF" flood-opacity="0.28" result="color" />
+                        <feComposite in="color" in2="blur" operator="in" result="glow" />
+                        <feMerge>
+                            <feMergeNode in="glow" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <circle class="progress-ring__bg" cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.06)" stroke-width="6" fill="none" />
+                <!-- no inline filter here to avoid rectangular clipping; glow applied via CSS class at end -->
+                <!-- thinner animated outline: stroke-width reduced for a more delicate contour -->
+                <circle class="progress-ring__circle" id="progressCircle" cx="60" cy="60" r="54" stroke="#00C7FF" stroke-width="3" stroke-linecap="round" fill="none" />
+            </svg>
+        </div>
+
+        <div class="match">
+            LOVE FOUND
+        </div>
+
+        <div class="duo-text">
+            Duo trovato
+            <br>
+            Michela ❤️ Alessandro
+        </div>
+
+        <button id="acceptBtn" onclick="enterProfile()">
+            ACCETTA
+        </button>
+
+    </div>
+
+</section>
+
+<main id="mainContent">
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>Duo Queue Eternal</h1>
+            <p>La nostra relazione &egrave; iniziata il 22 Giugno 2024</p>
+            <p id="daysCounter"></p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="card">
+            <h2 class="section-title">Profilo Evocatore</h2>
+
+            <div class="champions">
+                <article class="champion" id="sennaChampion">
+                    <div class="portrait">
+                     
+                        <img src="senna-login.png" alt="Senna" onerror="this.style.display='none'">
+                    </div>
+                    <h3>Senna &hearts; Axiallya</h3>
+                    <p>Main Support</p>
+                </article>
+
+                <div class="duo-heart">&hearts;</div>
+
+                <article class="champion" id="zileanChampion">
+                    <div class="portrait">
+                       
+                        <img src="zilean-login.png" alt="Zilean" onerror="this.style.display='none'">
+                    </div>
+                    <h3>Zilean &hearts; Mosca</h3>
+                    <p>Keeper of Time</p>
+                </article>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Statistiche della partita</h2>
+
+            <div class="stats">
+                <div class="stat">
+                    <img class="stat-icon" src="porogaming.JPG" alt="poro gaming">
+                    <strong id="daysTogether">730</strong>
+                    <span>Giorni insieme</span>
+                </div>
+
+                <div class="stat">
+                    <img class="stat-icon" src="porofiore.JPG" alt="poro fiore">
+                    <strong>&infin;</strong>
+                    <span>Risate condivise</span>
+                </div>
+
+                <div class="stat">
+                    <img class="stat-icon" src="cuore.jpg" alt="cuore">
+                    <strong>100%</strong>
+                    <span>Winrate nel mio cuore</span>
+                </div>
+
+                <div class="stat">
+                    <img class="stat-icon" src="challengier.jpg" alt="challenger">
+                    <strong>Challenger</strong>
+                    <span>Miglior Duo</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Achievement Sbloccati</h2>
+
+            <div class="achievements">
+                <div class="achievement unlocked">Prima Ranked Insieme</div>
+                <div class="achievement unlocked">Convivenza</div>
+                <div class="achievement unlocked">Laurea</div>
+                <div class="achievement unlocked">1 Anno Insieme</div>
+                <div class="achievement unlocked">2 Anni Insieme</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Missioni Future</h2>
+
+            <div class="achievements">
+                <div class="achievement locked">Andare a vivere in Olanda</div>
+                <div class="achievement locked">Casa Nostra</div>
+                <div class="achievement locked">Viaggio dei Sogni</div>
+               
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Battle Pass della Relazione</h2>
+
+            <div class="timeline">
+                <div class="timeline timeline-horizontal" id="timeline">
+                    <div class="timeline-item" data-image="22-06-2024.jpg" data-sound="Slain">
+                        <h3>22 Giugno 2024</h3>
+                        <p>Inizio della miglior partita della mia vita.</p>
+                    </div>
+
+                    <div class="timeline-item" data-image="2024.jpg" data-sound="double">
+                        <h3>2024</h3>
+                        <p>Prima vacanza insieme.</p>
+                    </div>
+
+                    <div class="timeline-item" data-image="anno.jpg" data-sound="triple">
+                        <h3>22 giugno 2025</h3>
+                        <p>Primo anno insieme.</p>
+                    </div>
+
+                    <div class="timeline-item" data-image="convivenza.jpg" data-sound="quadra">
+                        <h3>28 giugno 2025</h3>
+                        <p>Inizio convivenza.</p>
+                    </div>
+
+                    <div class="timeline-item" data-image="futuro.jpg" data-sound="pentakill">
+                        <h3>Futuro</h3>
+                        <p>Olanda, sogni e tantissime stagioni ancora.</p>
+                    </div>
+                </div>
+
+                <div id="timelinePreview" class="timeline-preview" style="display:none;">
+                    <img id="timelineImage" src="" alt="Preview" />
+                </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Ricompensa Evento</h2>
+
+            <div class="reward-btn">
+                <button onclick="showReward()">RISCUOTI PREMIO LEGGENDARIO</button>
+            </div>
+
+            <div id="reward">
+                <h2>ACHIEVEMENT LEGGENDARIO</h2>
+
+                <br>
+
+                <h1>Amore Eterno &hearts;</h1>
+
+                <br>
+
+                <p>
+                    Amore,<br><br>
+
+                    Se la nostra storia fosse una ranked,
+                    sceglierei ancora te in ogni lobby.
+
+                    Grazie per ogni momento,
+                    per ogni supporto,
+                    per ogni avventura.
+
+                    Sei il mio duo preferito.
+
+                    <br><br>
+
+                    Buon anniversario &hearts;
+
+                    <br><br>
+
+                    - Michela
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Highlights della stagione</h2>
+
+            <div class="gallery">
+                <div class="highlight">
+                    <img src="foto1.jpg" alt="Highlight 1" onerror="this.style.display='none'">
+                </div>
+                <div class="highlight">
+                    <img src="foto2.jpg" alt="Highlight 2" onerror="this.style.display='none'">
+                </div>
+                <div class="highlight">
+                    <img src="foto3.jpg" alt="Highlight 3" onerror="this.style.display='none'">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        League of Love &bull; Michela & Alessandro
+        <br>
+        <button id="lootBox" title="Loot segreto">🎁</button>
+    </footer>
+</main>
+
+<button id="patchHeart" title="Patch Notes">❤️</button>
+
+<div id="mythicAchievement" role="dialog" aria-modal="true" aria-label="Achievement Mythic">
+    <div class="mythic-card">
+        <div class="mythic-line">━━━━━━━━━━━━━━━━━━</div>
+        <h2 class="mythic-tier">ACHIEVEMENT MYTHIC</h2>
+        <h1 class="mythic-title">DUO FOREVER</h1>
+        <p class="mythic-pair">Michela ❤️ Alessandro</p>
+        <p class="mythic-date">
+            Sbloccato il:<br>
+            <strong>22 Giugno</strong>
+        </p>
+        <div class="mythic-line">━━━━━━━━━━━━━━━━━━</div>
+    </div>
+</div>
+
+<script>
+const startDate = new Date(2024, 5, 22);
+const validCodes = ["22062024", "22/06/2024", "22-06-2024", "michela"];
+let leagueLogoClicks = 0;
+let michelaSequence = "";
+const rewards = [
+    "Buono per un bacio ❤️",
+    "Buono per una coccola ❤️",
+    "Buono per una cena ❤️",
+    "Buono per una serata LoL senza flame ❤️",
+    "Buono per un abbraccio infinito ❤️"
+];
+
+function playAudio(id, volume = 1){
+    const audio = document.getElementById(id);
+
+    if(!audio){
+        return;
+    }
+
+    audio.volume = volume;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+function stopAudio(id){
+    const audio = document.getElementById(id);
+
+    if(!audio){
+        return;
+    }
+
+    audio.pause();
+    audio.currentTime = 0;
+}
+
+function startLoginAudio(){
+    const audio = document.getElementById("loginSound");
+
+    if(!audio || !audio.paused){
+        return;
+    }
+
+    audio.autoplay = true;
+    audio.volume = .42;
+    audio.play().catch(() => {});
+}
+
+document.addEventListener("pointerdown", startLoginAudio, { once:true });
+document.addEventListener("keydown", startLoginAudio, { once:true });
+document.addEventListener("DOMContentLoaded", startLoginAudio);
+window.addEventListener("load", startLoginAudio);
+window.addEventListener("pageshow", startLoginAudio);
+setTimeout(startLoginAudio, 250);
+setTimeout(startLoginAudio, 1000);
+
+document.getElementById("leagueLogo").addEventListener("click", () => {
+    leagueLogoClicks += 1;
+
+    if(leagueLogoClicks >= 5){
+        document.getElementById("teemoEgg").style.display = "block";
+    }
+});
+
+document.getElementById("zileanChampion").addEventListener("click", () => {
+    playAudio("pingSound", .8);
+    alert("Zilean ha visto tutte le timeline possibili.\nIn tutte sceglie Me.");
+});
+
+document.getElementById("sennaChampion").addEventListener("click", () => {
+    playAudio("pingSound", .8);
+    alert("Senna ha raccolto 999 anime.\nLa più preziosa sei te.");
+});
+
+document.getElementById("lootBox").addEventListener("click", () => {
+    const reward = rewards[Math.floor(Math.random() * rewards.length)];
+    alert(reward);
+});
+
+document.getElementById("patchHeart").addEventListener("click", () => {
+    alert("Patch Notes 22.06\n\nBug Fix:\n- Alessandro continua ad essere troppo bello.\n\nStatus:\n- Non verrà corretto.");
+});
+
+function showMythicAchievement(){
+    document.getElementById("mythicAchievement").style.display = "flex";
+}
+
+document.getElementById("mythicAchievement").addEventListener("click", () => {
+    document.getElementById("mythicAchievement").style.display = "none";
+});
+
+document.addEventListener("keydown", (event) => {
+    if(event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "m"){
+        showMythicAchievement();
+        return;
+    }
+
+    if(event.key.length !== 1){
+        return;
+    }
+
+    michelaSequence = (michelaSequence + event.key.toUpperCase()).slice(-7);
+
+    if(michelaSequence === "MICHELA"){
+        showMythicAchievement();
+        michelaSequence = "";
+    }
+});
+
+function login(){
+    const name = document.getElementById("summonerName").value.trim();
+    const code = document.getElementById("eventCode").value.trim().toLowerCase();
+    const error = document.getElementById("loginError");
+
+    if(!name || !validCodes.includes(code)){
+        error.innerText = "Credenziali evento non valide";
+        return;
+    }
+
+    error.innerText = "";
+    stopAudio("loginSound");
+    // Avvia la sequenza di match (gestita da startClient)
+    startClient();
+}
+
+function startClient(){
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    document.getElementById("matchFound").style.display = "flex";
+
+    const audio = document.getElementById("loveSound");
+    audio.play().catch(() => {});
+
+    const ring = document.getElementById("progressRing");
+    const circle = document.getElementById("progressCircle");
+    const accept = document.getElementById("acceptBtn");
+
+    // Mostra il bottone ACCETTA immediatamente
+    accept.style.display = "block";
+
+    const duration = 6000; // ms
+    const r = 54;
+    const circumference = 2 * Math.PI * r;
+
+    if(circle){
+        circle.style.strokeDasharray = `${circumference}`;
+        circle.style.strokeDashoffset = `${circumference}`;
+    }
+
+    const start = performance.now();
+
+    function animate(now){
+        const elapsed = now - start;
+        const progress = Math.min(1, elapsed / duration);
+        const offset = circumference * (1 - progress);
+
+        if(circle){
+            circle.style.strokeDashoffset = offset;
+        }
+
+        if(progress < 1){
+            requestAnimationFrame(animate);
+        } else {
+            // finale: intensifica il neon - applica filtro SVG (più morbido, senza bordi quadrati)
+            if(circle){
+                // assegna il filtro SVG definito e rendi il tratto pienamente visibile
+                circle.setAttribute('filter', 'url(#neon)');
+                circle.style.strokeOpacity = '1';
+            }
+        }
+    }
+
+    requestAnimationFrame(animate);
+
+}
+
+function enterProfile(){
+
+    document.getElementById("matchFound")
+        .style.display = "none";
+
+    document.getElementById("mainContent")
+        .style.display = "block";
+
+    // Dopo 2 secondi dall'entrata nella main section, riproduci welcome.mp3
+    setTimeout(() => {
+        playAudio('welcome', .9);
+    }, 2000);
+
+}
+
+function updateStats(){
+    const today = new Date();
+    const diff = today - startDate;
+    const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+
+    document.getElementById("daysTogether").innerText = days;
+    document.getElementById("daysCounter").innerText = `Livello Relazione: ${days} giorni`;
+}
+
+function showReward(){
+    // play Okay sound when claiming reward
+    playAudio('Okay', .9);
+    document.getElementById("reward").style.display = "block";
+}
+
+/* Timeline interaction: clicking an item shows a preview image (user will add images to paths) */
+function setupTimeline(){
+    const container = document.getElementById('timeline');
+    if(!container) return;
+
+    const items = Array.from(container.querySelectorAll('.timeline-item'));
+    const previewWrap = document.getElementById('timelinePreview');
+    const previewImg = document.getElementById('timelineImage');
+
+    function clearActive(){
+        items.forEach(i => i.classList.remove('active'));
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            clearActive();
+            item.classList.add('active');
+
+            const img = item.dataset.image || '';
+            const soundId = item.dataset.sound || '';
+
+            if(soundId){
+                // play associated sound (preloaded audio elements)
+                playAudio(soundId, .9);
+            }
+
+            if(!img){
+                if(previewWrap) previewWrap.style.display = 'none';
+                return;
+            }
+
+            // Try loading the image with fallback paths if the direct src fails
+            if(previewImg){
+                previewImg.alt = item.textContent.trim();
+
+                const prefixes = ["", "images/", "assets/", "assets/images/", "League/"];
+                let attempt = 0;
+
+                function tryNext(){
+                    if(attempt >= prefixes.length){
+                        // all attempts failed
+                        previewImg.style.display = 'none';
+                        if(previewWrap) previewWrap.style.display = 'none';
+                        return;
+                    }
+
+                    const candidate = prefixes[attempt] + img;
+                    attempt++;
+                    previewImg.style.display = '';
+                    previewImg.src = candidate;
+                }
+
+                // if load fails, try next prefix
+                previewImg.onerror = function(){
+                    tryNext();
+                };
+
+                // once loaded, make sure preview is visible
+                previewImg.onload = function(){
+                    if(previewWrap) previewWrap.style.display = 'block';
+                };
+
+                // start attempts
+                tryNext();
+            }
+            // scroll item into view a bit
+            item.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+        });
+    });
+}
+
+// initialize timeline interactions
+setupTimeline();
+
+updateStats();
+</script>
+
+</body>
+</html>
